@@ -26,15 +26,16 @@ public class HandController_finale : MonoBehaviour
         //jointArticulationBodies[10].xDrive = circuit_support_1_x;
         //jointArticulationBodies[11].yDrive = circuit_support_2_y;
         //jointArticulationBodies[12].zDrive = circuit_support_3_z;
-        // controllando i giunti nell'update la rotazione della mano non funziona bene
-        // mettendo 3 giunti revolute bisogna modificare le rotazioni su anchor rotation altrimenti gli assi sono tutti coincidenti 
+        //// Controllando i giunti nell'Update la rotazione della mano non funziona bene
+        //// Mettendo 3 giunti revolute bisogna modificare i parametri di Anchor Rotation altrimenti gli assi sono tutti coincidenti 
 
-        // Using rotate insted of setting transform.rotation , gives a little °non smooth° movement 
-        // When modifying the object's transform using transform.rotation or transform.rotate , causes problems in the collision 
-        // the collisions do not work as expected
+        //// Using rotate instead of setting transform.rotation , gives a little °non smooth° movement 
+        //// When modifying the object's transform using transform.rotation or transform.Rotate, causes problems in the collision 
+        //// the collisions do not work as expected
+        
         //Vector3 pos_attuale, pos_finale;
         //Vector3 baseOrientation_euler = baseOrientation.eulerAngles;
-        //hand.transform.rotation = Quaternion.Euler(baseOrientation_euler);   //se commento questa riga le collisioni tra mano e cubo si verificano
+        //hand.transform.rotation = Quaternion.Euler(baseOrientation_euler);
         
         //pos_finale = baseOrientation_euler;
         //pos_attuale.x = hand.transform.rotation.eulerAngles.x;
@@ -288,17 +289,9 @@ public class HandController_finale : MonoBehaviour
         var posZ = -(90 + (pos_finale.z - initialPose.z)) % 360;
 
         //Ogni asse singolarmente funziona ma non funzionano tutti e 3 assieme 
-        //--------------------------------------yaw--------------------------------------------- OK
         circuit_support_1.target = posX;
-        Debug.Log(posX + " " + pos_finale.y + " " + initialPose.y);
-
-        //----------------------------------------------------------------------------------- OK
-        circuit_support_2.target = posY;
-        Debug.Log(posY + " " + pos_finale.x + " " + initialPose.x);
-        
-        //--------------------------------------------------------------------------------------- OK
+        circuit_support_2.target = posY;        
         circuit_support_3.target = posZ;
-        Debug.Log(posZ + " " + pos_finale.z + " " + initialPose.z);
 
         jointArticulationBodies[10].xDrive = circuit_support_1;
         jointArticulationBodies[11].xDrive = circuit_support_2;

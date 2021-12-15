@@ -3,11 +3,10 @@ using JointState = RosMessageTypes.Sensor.JointState;
 
 public class HandController1 : MonoBehaviour
 {
-    private ROSConnection ros;
     public GameObject hand;
+    private ROSConnection ros;
     private ArticulationBody[] jointArticulationBodies;
-    private int nJoints = 10;
-    private int n = 0;
+    private int nJoints = 10, n = 0;
 
     void Start()
     {

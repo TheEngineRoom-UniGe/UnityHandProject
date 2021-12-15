@@ -17,6 +17,7 @@ public class HandClose : MonoBehaviour
 
     void init()
     {
+        // inizializzazione a zero degli angoli dei vari giunti.
         for (int i = 0; i < 10; i++)
         {
             var index = jointArticulationBodies[i].xDrive;

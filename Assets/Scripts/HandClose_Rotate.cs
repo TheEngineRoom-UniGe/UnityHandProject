@@ -1,13 +1,15 @@
-using System.Collections;
 using UnityEngine;
+using System.Collections;
 
 public class HandClose_Rotate : MonoBehaviour
 {
     public GameObject hand;
+    public ArticulationBody hand_tot;
     private ArticulationBody[] jointArticulationBodies;
     private double[] targets_close = { 70.0f, 65.0f, 60.0f, 65.0f, 70.0f, 65.0f, 70.0f, 65.0f, 80.0f, 50.0f };
     private int nJoints = 10;
-    private float rotx, roty, rotz;
+    private Vector3 angular_velocity;
+    private bool stop = false;
 
     void Start()
     {
@@ -19,13 +21,20 @@ public class HandClose_Rotate : MonoBehaviour
 
     void Update()
     {
-        hand.transform.rotation = Quaternion.Euler(rotx, roty, rotz);
+        //hand.transform.rotation = Quaternion.Euler(rotx, roty, rotz);    //la rotazione della mano funziona bene ma non avvengono più le collisioni
+
+        //hand_tot.transform.eulerAngles = new Vector3(90, 0, 0);          //se si agisce sulla transform non avvengono le collisioni
+
+        //Vector3 torque = new Vector3(0.0f, 20.0f, 0.0f);
+        //hand_tot.AddTorque(torque);
+        //hand_tot.AddRelativeTorque(torque);
+
+        hand_tot.angularVelocity = angular_velocity;
     }
 
     void init()
     {
-        hand.transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
-
+        // inizializzazione a 0 degli angoli dei vari giunti della mano.
         for (int i = 0; i < 10; i++)
         {
             var index = jointArticulationBodies[i].xDrive;
@@ -121,61 +130,6 @@ public class HandClose_Rotate : MonoBehaviour
             yield return new WaitForSeconds(0.02f);
         }
         yield return new WaitForSeconds(4.0f);
-        //GoToRestPos();
-    }
-
-    public void GoToRestPos()
-    {
-        StartCoroutine(GoToRestPosCoroutine());
-    }
-
-    private IEnumerator GoToRestPosCoroutine()
-    {
-        int steps = 6;
-        for (double i = 1; i <= steps; i += 0.2)
-        {
-            var pinkie_p = jointArticulationBodies[0].xDrive;
-            pinkie_p.target = (float)(targets_close[0] / i);
-            jointArticulationBodies[0].xDrive = pinkie_p;
-
-            var pinkie_m = jointArticulationBodies[1].xDrive;
-            pinkie_m.target = (float)(targets_close[1] / i);
-            jointArticulationBodies[1].xDrive = pinkie_m;
-
-            var ring_p = jointArticulationBodies[2].xDrive;
-            ring_p.target = (float)(targets_close[2] / i);
-            jointArticulationBodies[2].xDrive = ring_p;
-
-            var ring_m = jointArticulationBodies[3].xDrive;
-            ring_m.target = (float)(targets_close[3] / i);
-            jointArticulationBodies[3].xDrive = ring_m;
-
-            var middle_p = jointArticulationBodies[4].xDrive;
-            middle_p.target = (float)(targets_close[4] / i);
-            jointArticulationBodies[4].xDrive = middle_p;
-
-            var middle_m = jointArticulationBodies[5].xDrive;
-            middle_m.target = (float)(targets_close[5] / i);
-            jointArticulationBodies[5].xDrive = middle_m;
-
-            var index_p = jointArticulationBodies[6].xDrive;
-            index_p.target = (float)(targets_close[6] / i);
-            jointArticulationBodies[6].xDrive = index_p;
-
-            var index_m = jointArticulationBodies[7].xDrive;
-            index_m.target = (float)(targets_close[7] / i);
-            jointArticulationBodies[7].xDrive = index_m;
-
-            var thumb_p = jointArticulationBodies[8].xDrive;
-            thumb_p.target = (float)(targets_close[8] / i);
-            jointArticulationBodies[8].xDrive = thumb_p;
-
-            var thumb_m = jointArticulationBodies[9].xDrive;
-            thumb_m.target = (float)(targets_close[9] / i);
-            jointArticulationBodies[9].xDrive = thumb_m;
-
-            yield return new WaitForSeconds(0.02f);
-        }
     }
 
     private void RotateHand()
@@ -185,12 +139,20 @@ public class HandClose_Rotate : MonoBehaviour
 
     private IEnumerator RotateHandCoroutine()
     {
-        for (int i = 0; i <= 90; i++)
+        for (int i = 0; i < 9; i++)
         {
-            rotx = i;
-            roty = i;
-            rotz = i;
-            yield return new WaitForSeconds(0.01f);
+            if (stop)
+            {
+                angular_velocity = new Vector3(0.0f, -1.0f, 0.0f);
+                yield return new WaitForSeconds(3.0f);
+            }
+            else
+            {
+                angular_velocity = new Vector3(0.0f, 1.0f, 0.0f);
+                yield return new WaitForSeconds(3.0f);
+            }
+            stop = !stop;
+            yield return new WaitForSeconds(0.5f);
         }
     }
 }
